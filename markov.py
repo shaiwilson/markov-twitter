@@ -45,10 +45,6 @@ def make_text(chains):
 
     key = choice(chains.keys())
     words = [key[0], key[1]]
-    length = 140
-    character_length = 0 
-    string = ""
-    # print "length of string", len(string)
     while key in chains:
         # Keep looping until we have a key that isn't in the chains
         # (which would mean it was the end of our original text)
@@ -56,35 +52,60 @@ def make_text(chains):
         # Note that for long texts (like a full book), this might mean
         # it would run for a very long time.
 
-        # TODO : check word len bfore joining
-        print "our words", len(words)
-        if len(words) <= length: 
-            string = " ".join(words)
-            if key in chains:
-                word = choice(chains[key])
-                words.append(word)
-                key = (key[1], word)
-                #print "Here is the length of our string: " , len(string)
-            else:
-                return string
+        word = choice(chains[key])
+        words.append(word)
+        key = (key[1], word)
+
+    return " ".join(words)
+
+def split_chain(chains):
+    """Takes in string, and returns a string that is less than 140 characters"""
+    char_count = 0
+    character_limit = 140
+    final_string = ""
+
+    for i in range(len(chains)):
+        if i < character_limit:
+            final_string = final_string + chains[i]
+            # print chains[i]
+        else:
+            break 
+
+
+    return final_string
+    
 
 
 
-def tweet(chains):
+def tweet(chains, my_dict):
+    """Takes in string and tweets it to our twitter acount"""
+
     api = twitter.Api(
     consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
     consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
     access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],
     access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
 
-    # This will print info about credentials to make sure they're correct
     print api.VerifyCredentials()
-    status = api.PostUpdate("Our first tweeeeet")
-    print status.text
 
+    user_input = raw_input("Enter to tweet again [q to quit] > ")
+    while user_input != "q":
+        final_string = make_text(my_dict)
+        chains = split_chain(final_string)
+        status = api.PostUpdate(chains)
+        print status.text
+        if user_input == "q":
+            break
+        else:
+            user_input = raw_input("Enter to tweet again [q to quit] > ")
+           
+
+            
+
+    # Use Python os.environ to get at environmental variables
     # Note: you must run `source secrets.sh` before running this file
+  
     # to make sure these environmental variables are set.
-    
 
 # Get the filenames from the user through a command line prompt, ex:
 # python markov.py green-eggs.txt shakespeare.txt
@@ -96,7 +117,13 @@ text = open_and_read_file(filenames)
 # Get a Markov chain
 chains = make_chains(text)
 
-print(make_text(chains))
+# Get a Markov chain
+final_string = make_text(chains)
+
+chains_1 = split_chain(final_string)
+
+# send 140 char tweet, and a markov dict
+tweet(chains_1, chains)
 
 # Your task is to write a new function tweet, that will take chains as input
 # tweet(chains)
