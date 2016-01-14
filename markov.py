@@ -64,6 +64,7 @@ def split_chain(chains):
     character_limit = 140
     final_string = ""
 
+    # todo : FINAL_STRING = CHAINS[:139]
     for i in range(len(chains)):
         if i < character_limit:
             final_string = final_string + chains[i]
@@ -118,12 +119,16 @@ text = open_and_read_file(filenames)
 chains = make_chains(text)
 
 # Get a Markov chain
+
 final_string = make_text(chains)
-
 chains_1 = split_chain(final_string)
-
-# send 140 char tweet, and a markov dict
 tweet(chains_1, chains)
+   
+# TODO 3 THINGS
+# Create Robertina mashup! Use a different .txt file for the text generator
+# use a while loop in the main to call our functions (take out of tweet function)
+# use a slice in our make_function chains[:139] instead of split_chain function
 
-# Your task is to write a new function tweet, that will take chains as input
-# tweet(chains)
+# optional
+# be creative with where you end your text! i.e. punctuation marks?
+
