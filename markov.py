@@ -77,9 +77,7 @@ def split_chain(chains):
 
 
 def tweet(chains):
-    # Use Python os.environ to get at environmental variables
-    # Note: you must run `source secrets.sh` before running this file
-    # to make sure these environmental variables are set.
+    """Takes in string and tweets it to our twitter acount"""
     api = twitter.Api(
         consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
         consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
@@ -94,6 +92,7 @@ def tweet(chains):
         if response.lower() == 'q':
             break
 
+
 # Get the filenames from the user through a command line prompt, ex:
 # python markov.py green-eggs.txt shakespeare.txt
 filenames = sys.argv[1:]
@@ -104,5 +103,16 @@ text = open_and_read_file(filenames)
 # Get a Markov chain
 chains = make_chains(text)
 
-# Your task is to write a new function tweet, that will take chains as input
-# tweet(chains)
+# Get a Markov chain
+
+final_string = make_text(chains)
+chains_1 = split_chain(final_string)
+tweet(chains_1, chains)
+   
+# TODO 3 THINGS
+# Create Robertina mashup! Use a different .txt file for the text generator
+# use a while loop in the main to call our functions (take out of tweet function)
+# use a slice in our make_function chains[:139] instead of split_chain function
+
+# optional
+# be creative with where you end your text! i.e. punctuation marks?
