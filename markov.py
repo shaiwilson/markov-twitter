@@ -53,27 +53,13 @@ def make_text(chains):
         # it would run for a very long time.
 
         word = choice(chains[key])
-        words.append(word)
-        key = (key[1], word)
+        if len(" ".join(words)) + len(word) < 140:
+            words.append(word)
+            key = (key[1], word)
+        else:
+            break
 
     return " ".join(words)
-
-def split_chain(chains):
-    """Takes in string, and returns a string that is less than 140 characters"""
-    char_count = 0
-    character_limit = 140
-    final_string = ""
-
-    # todo : FINAL_STRING = CHAINS[:139]
-    for i in range(len(chains)):
-        if i < character_limit:
-            final_string = final_string + chains[i]
-            # print chains[i]
-        else:
-            break 
-
-
-    return final_string
 
 
 def tweet(chains):
@@ -103,16 +89,8 @@ text = open_and_read_file(filenames)
 # Get a Markov chain
 chains = make_chains(text)
 
-# Get a Markov chain
+# # Get a Markov chain
 
-final_string = make_text(chains)
-chains_1 = split_chain(final_string)
-tweet(chains_1, chains)
-   
-# TODO 3 THINGS
-# Create Robertina mashup! Use a different .txt file for the text generator
-# use a while loop in the main to call our functions (take out of tweet function)
-# use a slice in our make_function chains[:139] instead of split_chain function
+# final_string = make_text(chains)
 
-# optional
-# be creative with where you end your text! i.e. punctuation marks?
+tweet(chains)
